@@ -67,6 +67,16 @@ class Biblioteca:
     def contar_livros_disponiveis(self):
         """Conta o número total de livros disponíveis na biblioteca."""
         return sum(1 for livro in self.livros if livro.disponivel)
+    
+    def test_buscar_livro_por_titulo(biblioteca_teste):
+    # Busca um livro existente pelo título
+    livro_encontrado = biblioteca_teste.buscar_livro_por_titulo("Aventuras de Python")
+    assert livro_encontrado is not None
+    assert livro_encontrado.titulo == "Aventuras de Python"
+
+    # Busca um livro inexistente pelo título
+    livro_nao_encontrado = biblioteca_teste.buscar_livro_por_titulo("Livro Inexistente")
+    assert livro_nao_encontrado is None
 
 
 # Exemplo de uso

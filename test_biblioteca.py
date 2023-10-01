@@ -1,5 +1,4 @@
 import pytest
-import json
 from biblioteca import Livro, Biblioteca
 
 # Função de fixture para criar uma instância de Biblioteca para testes
@@ -45,6 +44,3 @@ def test_salvar_carregar_biblioteca(biblioteca_teste):
     # Limpa o arquivo de teste após os testes
     import os
     os.remove(arquivo)
-
-if __name__ == "__main__":
-    pytest.main()

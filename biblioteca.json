@@ -1,0 +1,1 @@
+{"nome": "Biblioteca Central", "livros": [{"titulo": "Aventuras de Python", "autor": "Guido van Rossum", "isbn": "123456", "disponivel": true}, {"titulo": "Introdu\u00e7\u00e3o ao Machine Learning", "autor": "Andrew Ng", "isbn": "789012", "disponivel": true}]}

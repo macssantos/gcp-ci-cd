@@ -64,6 +64,10 @@ class Biblioteca:
         ]
         print(f"Biblioteca {self.nome} carregada de {arquivo}.")
 
+    def contar_livros_disponiveis(self):
+        """Conta o número total de livros disponíveis na biblioteca."""
+        return sum(1 for livro in self.livros if livro.disponivel)
+
 
 # Exemplo de uso
 if __name__ == "__main__":

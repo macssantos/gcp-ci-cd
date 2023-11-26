@@ -1,23 +1,11 @@
-# Imagem base para o Python
-FROM python:3.9
+# Use a imagem base Python
+FROM python:3.8
 
-# Criando diretório de trabalho
-WORKDIR /GCP
+# Copie todos os arquivos Python do diretório local para o diretório de trabalho no contêiner
+COPY *.py /gcp-ci-cd/
 
-# Copiando os arquivos de código para o diretório de trabalho
-COPY biblioteca.py .
-#COPY script2.py .
+# Defina o diretório de trabalho como /app
+WORKDIR /gcp-ci-cd
 
-# Executando o primeiro arquivo de código
-CMD ["python", "script1.py"]# Imagem base para o Python
-FROM python:3.9
-
-# Criando diretório de trabalho
-WORKDIR /GCP
-
-# Copiando os arquivos de código para o diretório de trabalho
-COPY biblioteca.py .
-COPY script2.py .
-
-# Executando o primeiro arquivo de código
-CMD ["python", "script1.py"]
+# Execute todos os scripts Python no diretório de trabalho
+CMD ["bash", "-c", "for script in *.py; do python $script; done"]

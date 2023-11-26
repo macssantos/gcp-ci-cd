@@ -7,10 +7,17 @@ class Livro:
         self.isbn = isbn
         self.disponivel = True
 
+class Cliente:
+    def __init__(self, nome, idade, cpf):
+        self.nome = nome
+        self.idade = idade
+        self.cpf = cpf
+
 class Biblioteca:
     def __init__(self, nome):
         self.nome = nome
         self.livros = []
+        self.clientes = []
 
     def adicionar_livro(self, livro):
         """Adiciona um livro à biblioteca."""
@@ -21,6 +28,16 @@ class Biblioteca:
         for livro in self.livros:
             status = "Disponível" if livro.disponivel else "Indisponível"
             print(f"{livro.titulo} - {livro.autor} ({status})")
+
+    def adicionar_cliente(self, cliente):
+        """Adiciona um cliente à biblioteca."""
+        self.clientes.append(cliente)
+        print(f"Cliente {cliente.nome} cadastrado na biblioteca {self.nome}.")
+
+    def listar_clientes(self):
+        """Lista todos os clientes da biblioteca."""
+        for cliente in self.clientes:
+            print(f"{cliente.nome} - Idade: {cliente.idade} - CPF: {cliente.cpf}")
 
     def emprestar_livro(self, isbn):
         """Empresta um livro da biblioteca."""
@@ -40,6 +57,13 @@ class Biblioteca:
                 return
         print("Livro não encontrado ou já devolvido.")
 
+    def buscar_livro_por_titulo(self, titulo):
+        """Busca um livro pelo título na biblioteca."""
+        for livro in self.livros:
+            if livro.titulo == titulo:
+                return livro
+        return None
+
     def salvar_biblioteca(self, arquivo):
         """Salva o estado atual da biblioteca em um arquivo JSON."""
         biblioteca_json = {
@@ -47,6 +71,10 @@ class Biblioteca:
             'livros': [
                 {'titulo': livro.titulo, 'autor': livro.autor, 'isbn': livro.isbn, 'disponivel': livro.disponivel}
                 for livro in self.livros
+            ],
+            'clientes': [
+                {'nome': cliente.nome, 'idade': cliente.idade, 'cpf': cliente.cpf}
+                for cliente in self.clientes
             ]
         }
         with open(arquivo, 'w') as f:
@@ -62,40 +90,11 @@ class Biblioteca:
         self.livros = [
             Livro(livro['titulo'], livro['autor'], livro['isbn']) for livro in biblioteca_json['livros']
         ]
+        self.clientes = [
+            Cliente(cliente['nome'], cliente['idade'], cliente['cpf']) for cliente in biblioteca_json['clientes']
+        ]
         print(f"Biblioteca {self.nome} carregada de {arquivo}.")
 
     def contar_livros_disponiveis(self):
         """Conta o número total de livros disponíveis na biblioteca."""
         return sum(1 for livro in self.livros if livro.disponivel)
-    
-    def test_buscar_livro_por_titulo(biblioteca_teste):
-    # Busca um livro existente pelo título
-        livro_encontrado = biblioteca_teste.buscar_livro_por_titulo("Aventuras de Python")
-        assert livro_encontrado is not None
-        assert livro_encontrado.titulo == "Aventuras de Python"
-
-    # Busca um livro inexistente pelo título
-        livro_nao_encontrado = biblioteca_teste.buscar_livro_por_titulo("Livro Inexistente")
-        assert livro_nao_encontrado is None
-
-
-# Exemplo de uso
-if __name__ == "__main__":
-    biblioteca = Biblioteca("Biblioteca Central")
-
-    livro1 = Livro("Aventuras de Python", "Guido van Rossum", "123456")
-    livro2 = Livro("Introdução ao Machine Learning", "Andrew Ng", "789012")
-
-    biblioteca.adicionar_livro(livro1)
-    biblioteca.adicionar_livro(livro2)
-
-    biblioteca.listar_livros()
-
-    biblioteca.emprestar_livro("123456")
-    biblioteca.listar_livros()
-
-    biblioteca.devolver_livro("123456")
-    biblioteca.listar_livros()
-
-    biblioteca.salvar_biblioteca("biblioteca.json")
-    biblioteca.carregar_biblioteca("biblioteca.json")

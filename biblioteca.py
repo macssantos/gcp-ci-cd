@@ -38,6 +38,11 @@ class Biblioteca:
         """Lista todos os clientes da biblioteca."""
         for cliente in self.clientes:
             print(f"{cliente.nome} - Idade: {cliente.idade} - CPF: {cliente.cpf}")
+            
+    def buscar_livros_por_autor(self, nome_autor):
+        """Busca livros na biblioteca por autor."""
+        livros_encontrados = [livro for livro in self.livros if livro.autor.nome == nome_autor]
+        return livros_encontrados
 
     def emprestar_livro(self, isbn):
         """Empresta um livro da biblioteca."""

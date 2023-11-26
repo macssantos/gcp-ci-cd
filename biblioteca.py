@@ -1,18 +1,4 @@
 import json
-
-class Livro:
-    def __init__(self, titulo, autor, isbn):
-        self.titulo = titulo
-        self.autor = autor
-        self.isbn = isbn
-        self.disponivel = True
-
-class Cliente:
-    def __init__(self, nome, idade, cpf):
-        self.nome = nome
-        self.idade = idade
-        self.cpf = cpf
-
 class Biblioteca:
     def __init__(self, nome):
         self.nome = nome
@@ -103,3 +89,8 @@ class Biblioteca:
     def contar_livros_disponiveis(self):
         """Conta o número total de livros disponíveis na biblioteca."""
         return sum(1 for livro in self.livros if livro.disponivel)
+    
+    def buscar_livros_por_localidade(self, localidade_autor):
+        """Busca livros na biblioteca por localidade do autor."""
+        livros_encontrados = [livro for livro in self.livros if livro.autor.localidade == localidade_autor]
+        return livros_encontrados

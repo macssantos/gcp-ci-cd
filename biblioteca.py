@@ -137,3 +137,15 @@ class Biblioteca:
         print("Ranking dos Livros Mais Lidos:")
         for i, livro in enumerate(livros_ranking, start=1):
             print(f"{i}. {livro.titulo} - {livro.autor.nome} - Empréstimos: {livro.emprestimos}")
+            
+    def imprimir_biografia_autor(self, nome_autor):
+        """Imprime a biografia de um autor."""
+        for autor in self.autores:
+            if autor.nome == nome_autor:
+                if autor.biografia:
+                    print(f"Biografia de {autor.nome}:\n{autor.biografia}")
+                else:
+                    print(f"Biografia de {autor.nome} não disponível.")
+                return
+
+        print(f"Autor {nome_autor} não encontrado na biblioteca.")

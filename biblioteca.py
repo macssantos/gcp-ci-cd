@@ -81,3 +81,13 @@ class Biblioteca:
                 print(f"{livro.titulo} - {livro.autor.nome} ({status})")
         else:
             print(f"Nenhum livro encontrado na categoria {categoria}.")
+
+    def filtrar_autores_por_localidade(self, localidade):
+        """Filtra autores por localidade na biblioteca."""
+        autores_localidade = set([livro.autor.nome for livro in self.livros if livro.autor.localidade == localidade])
+        if autores_localidade:
+            print(f"Autores na localidade {localidade}:")
+            for autor_nome in autores_localidade:
+                print(autor_nome)
+        else:
+            print(f"Nenhum autor encontrado na localidade {localidade}.")

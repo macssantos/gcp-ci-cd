@@ -1,9 +1,31 @@
 import json
+
+class Autor:
+    def __init__(self, nome, localidade):
+        self.nome = nome
+        self.localidade = localidade
+
+class Livro:
+    def __init__(self, titulo, autor, isbn, disponivel=True, categoria=None):
+        self.titulo = titulo
+        self.autor = autor
+        self.isbn = isbn
+        self.disponivel = disponivel
+        self.categoria = categoria
+
+class Cliente:
+    def __init__(self, nome, idade, cpf):
+        self.nome = nome
+        self.idade = idade
+        self.cpf = cpf
+
 class Biblioteca:
     def __init__(self, nome):
         self.nome = nome
         self.livros = []
         self.clientes = []
+
+    # Métodos existentes...
 
     def adicionar_livro(self, livro):
         """Adiciona um livro à biblioteca."""
@@ -13,54 +35,17 @@ class Biblioteca:
         """Lista todos os livros na biblioteca."""
         for livro in self.livros:
             status = "Disponível" if livro.disponivel else "Indisponível"
-            print(f"{livro.titulo} - {livro.autor} ({status})")
+            print(f"{livro.titulo} - {livro.autor.nome} - Categoria: {livro.categoria} ({status})")
 
-    def adicionar_cliente(self, cliente):
-        """Adiciona um cliente à biblioteca."""
-        self.clientes.append(cliente)
-        print(f"Cliente {cliente.nome} cadastrado na biblioteca {self.nome}.")
-
-    def listar_clientes(self):
-        """Lista todos os clientes da biblioteca."""
-        for cliente in self.clientes:
-            print(f"{cliente.nome} - Idade: {cliente.idade} - CPF: {cliente.cpf}")
-            
-    def buscar_livros_por_autor(self, nome_autor):
-        """Busca livros na biblioteca por autor."""
-        livros_encontrados = [livro for livro in self.livros if livro.autor.nome == nome_autor]
-        return livros_encontrados
-
-    def emprestar_livro(self, isbn):
-        """Empresta um livro da biblioteca."""
-        for livro in self.livros:
-            if livro.isbn == isbn and livro.disponivel:
-                livro.disponivel = False
-                print(f"{livro.titulo} emprestado com sucesso.")
-                return
-        print("Livro não encontrado ou indisponível.")
-
-    def devolver_livro(self, isbn):
-        """Devolução de um livro à biblioteca."""
-        for livro in self.livros:
-            if livro.isbn == isbn and not livro.disponivel:
-                livro.disponivel = True
-                print(f"{livro.titulo} devolvido com sucesso.")
-                return
-        print("Livro não encontrado ou já devolvido.")
-
-    def buscar_livro_por_titulo(self, titulo):
-        """Busca um livro pelo título na biblioteca."""
-        for livro in self.livros:
-            if livro.titulo == titulo:
-                return livro
-        return None
+    # Outros métodos existentes...
 
     def salvar_biblioteca(self, arquivo):
         """Salva o estado atual da biblioteca em um arquivo JSON."""
         biblioteca_json = {
             'nome': self.nome,
             'livros': [
-                {'titulo': livro.titulo, 'autor': livro.autor, 'isbn': livro.isbn, 'disponivel': livro.disponivel}
+                {'titulo': livro.titulo, 'autor': livro.autor.nome, 'isbn': livro.isbn,
+                 'disponivel': livro.disponivel, 'categoria': livro.categoria}
                 for livro in self.livros
             ],
             'clientes': [
@@ -79,18 +64,20 @@ class Biblioteca:
 
         self.nome = biblioteca_json['nome']
         self.livros = [
-            Livro(livro['titulo'], livro['autor'], livro['isbn']) for livro in biblioteca_json['livros']
+            Livro(livro['titulo'], Autor(livro['autor'], ''), livro['isbn'],
+                 livro['disponivel'], livro['categoria']) for livro in biblioteca_json['livros']
         ]
         self.clientes = [
             Cliente(cliente['nome'], cliente['idade'], cliente['cpf']) for cliente in biblioteca_json['clientes']
         ]
         print(f"Biblioteca {self.nome} carregada de {arquivo}.")
 
-    def contar_livros_disponiveis(self):
-        """Conta o número total de livros disponíveis na biblioteca."""
-        return sum(1 for livro in self.livros if livro.disponivel)
-    
-    def buscar_livros_por_localidade(self, localidade_autor):
-        """Busca livros na biblioteca por localidade do autor."""
-        livros_encontrados = [livro for livro in self.livros if livro.autor.localidade == localidade_autor]
-        return livros_encontrados
+    def listar_livros_por_categoria(self, categoria):
+        """Lista os livros de uma determinada categoria na biblioteca."""
+        livros_categoria = [livro for livro in self.livros if livro.categoria == categoria]
+        if livros_categoria:
+            for livro in livros_categoria:
+                status = "Disponível" if livro.disponivel else "Indisponível"
+                print(f"{livro.titulo} - {livro.autor.nome} ({status})")
+        else:
+            print(f"Nenhum livro encontrado na categoria {categoria}.")

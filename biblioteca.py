@@ -12,6 +12,7 @@ class Livro:
         self.isbn = isbn
         self.disponivel = disponivel
         self.categoria = categoria
+        self.emprestimos = 0  # Adiciona um contador de empréstimos
 
 class Cliente:
     def __init__(self, nome, idade, cpf):
@@ -39,14 +40,7 @@ class Biblioteca:
 
     # Outros métodos existentes...
     
-    class Livro:
-     def __init__(self, titulo, autor, isbn, disponivel=True, categoria=None):
-        self.titulo = titulo
-        self.autor = autor
-        self.isbn = isbn
-        self.disponivel = disponivel
-        self.categoria = categoria
-        self.emprestimos = 0  # Adiciona um contador de empréstimos
+
 
     def emprestar(self):
         """Registra um empréstimo do livro."""

@@ -14,9 +14,9 @@ def cliente():
 
 @pytest.fixture
 def livro():
-    return Livro("Aventuras na Biblioteca", "Autor Teste", "123456789")
+    return livro("Aventuras na Biblioteca", "Autor Teste", "123456789")
 
-def test_emprestimo_devolucao(biblioteca, cliente, livro):
+def test_emprestimo_devolucao(biblioteca: Biblioteca, cliente: Cliente, livro: Any):
     biblioteca.adicionar_cliente(cliente)
     biblioteca.adicionar_livro(livro)
 
@@ -29,7 +29,7 @@ def test_emprestimo_devolucao(biblioteca, cliente, livro):
     emprestimo.devolver()
     assert livro.disponivel
 
-def test_historico_cliente(biblioteca, cliente, livro):
+def test_historico_cliente(biblioteca: Biblioteca, cliente: Cliente, livro: Any):
     biblioteca.adicionar_cliente(cliente)
     biblioteca.adicionar_livro(livro)
 

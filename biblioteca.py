@@ -38,6 +38,32 @@ class Biblioteca:
             print(f"{livro.titulo} - {livro.autor.nome} - Categoria: {livro.categoria} ({status})")
 
     # Outros métodos existentes...
+    
+    class Livro:
+    def __init__(self, titulo, autor, isbn, disponivel=True, categoria=None):
+        self.titulo = titulo
+        self.autor = autor
+        self.isbn = isbn
+        self.disponivel = disponivel
+        self.categoria = categoria
+        self.emprestimos = 0  # Adiciona um contador de empréstimos
+
+    def emprestar(self):
+        """Registra um empréstimo do livro."""
+        if self.disponivel:
+            self.emprestimos += 1
+            self.disponivel = False
+            print(f"{self.titulo} emprestado com sucesso.")
+        else:
+            print(f"{self.titulo} não está disponível para empréstimo.")
+
+    def devolver(self):
+        """Registra a devolução do livro."""
+        if not self.disponivel:
+            self.disponivel = True
+            print(f"{self.titulo} devolvido com sucesso.")
+        else:
+            print(f"{self.titulo} já está disponível.")
 
     def salvar_biblioteca(self, arquivo):
         """Salva o estado atual da biblioteca em um arquivo JSON."""
@@ -103,3 +129,11 @@ class Biblioteca:
                 return livro
 
         return None
+    
+    def ranking_livros_mais_lidos(self, top_n=5):
+        """Retorna um ranking dos top_n livros mais lidos na biblioteca."""
+        livros_ranking = sorted(self.livros, key=lambda livro: livro.emprestimos, reverse=True)[:top_n]
+
+        print("Ranking dos Livros Mais Lidos:")
+        for i, livro in enumerate(livros_ranking, start=1):
+            print(f"{i}. {livro.titulo} - {livro.autor.nome} - Empréstimos: {livro.emprestimos}")

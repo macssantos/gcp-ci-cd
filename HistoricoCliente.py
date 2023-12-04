@@ -1,5 +1,5 @@
 # historico_cliente.py
-import cliente from cliente
+import cliente 
 class HistoricoCliente:
     def __init__(self):
         self.historico_emprestimos = []

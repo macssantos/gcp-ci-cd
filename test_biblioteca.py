@@ -1,4 +1,5 @@
 import pytest
+import autor
 from biblioteca import Livro, Biblioteca
 
 # Função de fixture para criar uma instância de Biblioteca para testes
@@ -44,3 +45,28 @@ def test_salvar_carregar_biblioteca(biblioteca_teste):
     # Limpa o arquivo de teste após os testes
     import os
     os.remove(arquivo)
+   # Teste para verificar se a biblioteca é filtrada corretamente 
+
+def test_buscar_livros_por_localidade(biblioteca_teste):
+
+    biblioteca = Biblioteca("Biblioteca Municipal")
+
+    livro_1 = Livro("O Pequeno Príncipe", autor("Antoine de Saint-Exupéry", "Biografia", "França"),False,100,True)
+    livro_2 = Livro("Dom Quixote", autor("Miguel de Cervantes", "Biografia", "Espanha"),False,150,True)
+    livro_3 = Livro("Harry Potter e a Pedra Filosofal", autor("J.K. Rowling", "Biografia", "Reino Unido"),False,200,True)
+
+    biblioteca.adicionar_livro(livro_1)
+    biblioteca.adicionar_livro(livro_2)
+    biblioteca.adicionar_livro(livro_3)
+
+    livros_franceses = biblioteca.buscar_livros_por_localidade("França")
+    biblioteca_teste.assertEqual(len(livros_franceses), 1)
+    biblioteca_teste.assertEqual(livros_franceses[0].titulo, "Dom Quixote")
+
+    livros_espanhóis = biblioteca.buscar_livros_por_localidade("Espanha")
+    biblioteca_teste.assertEqual(len(livros_espanhóis), 1)
+    biblioteca_teste.assertEqual(livros_espanhóis[0].titulo, "Dom Quixote")
+
+    livros_britânicos = biblioteca.buscar_livros_por_localidade("Reino Unido")
+    biblioteca_teste.assertEqual(len(livros_britânicos), 1)
+    biblioteca_teste.assertEqual(livros_britânicos[0].titulo, "Harry Potter e a Pedra Filosofal")

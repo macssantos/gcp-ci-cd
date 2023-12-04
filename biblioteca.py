@@ -91,3 +91,15 @@ class Biblioteca:
                 print(autor_nome)
         else:
             print(f"Nenhum autor encontrado na localidade {localidade}.")
+
+    def localizar_livro(self, titulo=None, autor=None, isbn=None):
+        """Localiza um livro na biblioteca com base em critérios específicos."""
+        for livro in self.livros:
+            if (
+                (titulo is None or livro.titulo.lower() == titulo.lower()) and
+                (autor is None or livro.autor.nome.lower() == autor.lower()) and
+                (isbn is None or livro.isbn == isbn)
+            ):
+                return livro
+
+        return None

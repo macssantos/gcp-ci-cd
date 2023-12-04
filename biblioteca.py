@@ -1,9 +1,11 @@
 import json
+import cliente
+
 class Biblioteca:
     def __init__(self, nome):
         self.nome = nome
         self.livros = []
-        self.clientes = []
+        self.clientes = [cliente]
 
     def adicionar_livro(self, livro):
         """Adiciona um livro à biblioteca."""
@@ -23,7 +25,7 @@ class Biblioteca:
     def listar_clientes(self):
         """Lista todos os clientes da biblioteca."""
         for cliente in self.clientes:
-            print(f"{cliente.nome} - Idade: {cliente.idade} - CPF: {cliente.cpf}")
+            print(f"{cliente.nome} - Idade: {cliente.idade} - Ocupação: {cliente.ocupacao}")
             
     def buscar_livros_por_autor(self, nome_autor):
         """Busca livros na biblioteca por autor."""
@@ -82,7 +84,7 @@ class Biblioteca:
             Livro(livro['titulo'], livro['autor'], livro['isbn']) for livro in biblioteca_json['livros']
         ]
         self.clientes = [
-            Cliente(cliente['nome'], cliente['idade'], cliente['cpf']) for cliente in biblioteca_json['clientes']
+            cliente(cliente['nome'], cliente['idade'], cliente['ocupacao']) for cliente in biblioteca_json['clientes']
         ]
         print(f"Biblioteca {self.nome} carregada de {arquivo}.")
 
@@ -94,3 +96,13 @@ class Biblioteca:
         """Busca livros na biblioteca por localidade do autor."""
         livros_encontrados = [livro for livro in self.livros if livro.autor.localidade == localidade_autor]
         return livros_encontrados
+class Livro:
+    def __init__(self, titulo, autor, isbn, paginas, disponivel):
+        self.titulo = titulo
+        self.autor = autor
+        self.isbn = isbn
+        self.paginas = paginas
+        self.disponivel = disponivel
+
+    def __str__(self):
+        return f"{self.titulo} - {self.autor} - {self.isbn} - {self.paginas} - {self.disponivel}"

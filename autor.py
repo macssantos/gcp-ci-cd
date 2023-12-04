@@ -1,7 +1,7 @@
 import json
 
 class Autor:
-    def __init__(self, nome, biografia):
+    def __init__(self, nome, biografia, localidade):
         self.nome = nome
         self.biografia = biografia
         self.localidade = localidade

@@ -40,7 +40,7 @@ class Biblioteca:
     # Outros métodos existentes...
     
     class Livro:
-    def __init__(self, titulo, autor, isbn, disponivel=True, categoria=None):
+     def __init__(self, titulo, autor, isbn, disponivel=True, categoria=None):
         self.titulo = titulo
         self.autor = autor
         self.isbn = isbn

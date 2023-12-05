@@ -26,11 +26,13 @@ class Biblioteca:
         self.livros = []
         self.clientes = []
 
-    # Métodos existentes...
+  
+        # Método ajustado
+    def adicionar_livro(self, titulo, autor, isbn, disponivel=True, categoria=None):
+        novo_livro = Livro(titulo, autor, isbn, disponivel, categoria)
+        self.livros.append(novo_livro)
+        return novo_livro
 
-    def adicionar_livro(self, livro):
-        """Adiciona um livro à biblioteca."""
-        self.livros.append(livro)
 
     def listar_livros(self):
         """Lista todos os livros na biblioteca."""
@@ -59,37 +61,48 @@ class Biblioteca:
             print(f"{self.titulo} já está disponível.")
 
     def salvar_biblioteca(self, arquivo):
-        """Salva o estado atual da biblioteca em um arquivo JSON."""
-        biblioteca_json = {
-            'nome': self.nome,
-            'livros': [
-                {'titulo': livro.titulo, 'autor': livro.autor.nome, 'isbn': livro.isbn,
-                 'disponivel': livro.disponivel, 'categoria': livro.categoria}
-                for livro in self.livros
-            ],
-            'clientes': [
-                {'nome': cliente.nome, 'idade': cliente.idade, 'cpf': cliente.cpf}
-                for cliente in self.clientes
-            ]
-        }
-        with open(arquivo, 'w') as f:
-            json.dump(biblioteca_json, f)
-        print(f"Biblioteca {self.nome} salva em {arquivo}.")
+            biblioteca_json = {
+                'nome': self.nome,
+                'livros': [
+                    {
+                        'titulo': livro.titulo,
+                        'autor': livro.autor.nome,
+                        'isbn': livro.isbn,
+                        'disponivel': livro.disponivel,
+                        'categoria': livro.categoria
+                    }
+                    for livro in self.livros
+                ],
+                'clientes': [
+                    {'nome': cliente.nome, 'idade': cliente.idade, 'cpf': cliente.cpf}
+                    for cliente in self.clientes
+                ]
+            }
+            with open(arquivo, 'w') as f:
+                json.dump(biblioteca_json, f)
+            print(f"Biblioteca {self.nome} salva em {arquivo}.")
 
     def carregar_biblioteca(self, arquivo):
-        """Carrega o estado anterior da biblioteca a partir de um arquivo JSON."""
         with open(arquivo, 'r') as f:
             biblioteca_json = json.load(f)
 
         self.nome = biblioteca_json['nome']
         self.livros = [
-            livro(livro['titulo'], Autor(livro['autor'], ''), livro['isbn'],
-                 livro['disponivel'], livro['categoria']) for livro in biblioteca_json['livros']
+            Livro(
+                livro['titulo'],
+                Autor(livro['autor'], ''),  # Ajuste aqui se necessário
+                livro['isbn'],
+                livro['disponivel'],
+                livro['categoria']
+            )
+            for livro in biblioteca_json['livros']
         ]
         self.clientes = [
-            Cliente(cliente['nome'], cliente['idade'], cliente['cpf']) for cliente in biblioteca_json['clientes']
+            Cliente(cliente['nome'], cliente['idade'], cliente['cpf'])
+            for cliente in biblioteca_json['clientes']
         ]
         print(f"Biblioteca {self.nome} carregada de {arquivo}.")
+
 
     def listar_livros_por_categoria(self, categoria):
         """Lista os livros de uma determinada categoria na biblioteca."""

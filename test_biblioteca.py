@@ -11,18 +11,30 @@ from biblioteca import Biblioteca, Livro, Cliente,Autor  # Certifique-se de que 
 def biblioteca():
     return Biblioteca("Biblioteca de Teste")
 
-@pytest.fixture
-def livro():
-    return Livro("Livro Teste", Autor("Autor Teste", "Localidade Teste"), "1234567890")
+# @pytest.fixture
+# def livro():
+#     return Livro("Livro Teste", Autor("Autor Teste", "Localidade Teste"), "1234567890")
 
 @pytest.fixture
 def cliente():
     return Cliente("Cliente Teste", 25, "123.456.789-01")
 
 def test_adicionar_livro(biblioteca, livro):
-    biblioteca.adicionar_livro(livro)
+    # Dados do livro
+    titulo = "Título do Livro"
+    autor = "Autor do Livro"
+    isbn = "123456789"
+
+    # Adiciona o livro à biblioteca
+    novo_livro = biblioteca.adicionar_livro(titulo, autor, isbn)
+
+    # Verificações
     assert len(biblioteca.livros) == 1
-    assert biblioteca.livros[0] == livro
+    assert novo_livro.titulo == titulo
+    assert novo_livro.autor == autor
+    assert novo_livro.isbn == isbn
+    assert novo_livro.disponivel is True  # Considerando que o padrão seja disponível
+    assert novo_livro.categoria is None  # Considerando que o padrão seja None
 
 def test_listar_livros(biblioteca, livro, capsys):
     biblioteca.adicionar_livro(livro)
@@ -34,14 +46,14 @@ def test_listar_livros(biblioteca, livro, capsys):
 
 def test_salvar_carregar_biblioteca(biblioteca, livro, cliente, tmp_path):
     arquivo = tmp_path / "test_biblioteca.json"
-    
+
     biblioteca.adicionar_livro(livro)
     biblioteca.adicionar_cliente(cliente)
     biblioteca.salvar_biblioteca(arquivo)
-    
+
     nova_biblioteca = Biblioteca("Nova Biblioteca")
     nova_biblioteca.carregar_biblioteca(arquivo)
-    
+
     assert nova_biblioteca.nome == biblioteca.nome
     assert len(nova_biblioteca.livros) == 1
     assert nova_biblioteca.livros[0].titulo == livro.titulo

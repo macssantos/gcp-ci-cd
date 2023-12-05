@@ -5,13 +5,13 @@ class Autor:
         self.nome = nome
         self.localidade = localidade
 
-class Livro:
-    def __init__(self, titulo, autor, isbn, disponivel=True, categoria=None):
-        self.titulo = titulo
-        self.autor = autor
-        self.isbn = isbn
-        self.disponivel = disponivel
-        self.categoria = categoria
+# lass Livro:
+    #def __init__(self, titulo, autor, isbn, disponivel=True, categoria=None):
+        #self.titulo = titulo
+        #self.autor = autor
+        #self.isbn = isbn
+        #self.disponivel = disponivel
+        #self.categoria = categoria
 
 class Cliente:
     def __init__(self, nome, idade, cpf):
@@ -90,7 +90,7 @@ class Biblioteca:
 
         self.nome = biblioteca_json['nome']
         self.livros = [
-            Livro(livro['titulo'], Autor(livro['autor'], ''), livro['isbn'],
+            livro(livro['titulo'], Autor(livro['autor'], ''), livro['isbn'],
                  livro['disponivel'], livro['categoria']) for livro in biblioteca_json['livros']
         ]
         self.clientes = [

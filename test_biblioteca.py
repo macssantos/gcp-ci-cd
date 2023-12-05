@@ -11,9 +11,10 @@ from biblioteca import Biblioteca, Livro, Cliente,Autor  # Certifique-se de que 
 def biblioteca():
     return Biblioteca("Biblioteca de Teste")
 
-# @pytest.fixture
-# def livro():
-#     return Livro("Livro Teste", Autor("Autor Teste", "Localidade Teste"), "1234567890")
+@pytest.fixture
+def livro():
+    return Livro("Livro Teste", Autor("Autor Teste", "Localidade Teste"), "1234567890")
+
 
 @pytest.fixture
 def cliente():

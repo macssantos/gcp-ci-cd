@@ -1,4 +1,5 @@
-class Biblioteca:
+import biblioteca
+class reserva:
     # ... (código existente)
 
     def __init__(self, nome):

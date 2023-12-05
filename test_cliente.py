@@ -1,56 +1,73 @@
 import unittest
-from biblioteca import Biblioteca  # Certifique-se de importar a classe Biblioteca ou ajustar conforme necessário
-from cliente import Cliente  # Certifique-se de importar a classe Cliente ou ajustar conforme necessário
+import pytest
+from cliente import Cliente
+from biblioteca import Biblioteca, Livro, Autor
 
-class TestCliente(unittest.TestCase):
+@pytest.fixture
+def biblioteca():
+    return Biblioteca("Biblioteca de Teste")
 
-    def setUp(self):
-        # Configuração inicial para os testes
-        self.biblioteca = Biblioteca("Biblioteca Central")
-        self.cliente = Cliente("João", 25, "Estudante")
+@pytest.fixture
+def cliente():
+    return Cliente("Cliente Teste", 25, "123.456.789-01")
 
-    def test_entrar_na_biblioteca(self):
-        self.cliente.entrar_na_biblioteca(self.biblioteca)
-        self.assertEqual(self.cliente.biblioteca, self.biblioteca)
-        self.assertIn(self.cliente, self.biblioteca.visitantes)
-        # Adicione mais verificações conforme necessário
+def test_entrar_na_biblioteca(cliente, biblioteca, capsys):
+    cliente.entrar_na_biblioteca(biblioteca)
+    captured = capsys.readouterr()
+    assert f"{cliente.nome} entrou na biblioteca {biblioteca.nome}." in captured.out
 
-    def test_procurar_livro_por_titulo(self):
-        livro1 = self.biblioteca.adicionar_livro("Aprendendo Python", "John Smith", "123456789")
-        self.cliente.entrar_na_biblioteca(self.biblioteca)
+def test_procurar_livro_por_titulo_com_biblioteca(cliente, biblioteca, capsys):
+    # Adiciona um livro à biblioteca
+    livro = Livro("Python 101", Autor("John Doe", ""), "123456789")
+    biblioteca.adicionar_livro(livro)
 
-        # Verifique se o cliente encontra o livro
-        with unittest.mock.patch('builtins.print') as mock_print:
-            self.cliente.procurar_livro_por_titulo("Aprendendo Python")
-            mock_print.assert_called_with(f"João encontrou o livro: {livro1.titulo} - {livro1.autor}")
+    # Testando a busca por um livro existente
+    cliente.procurar_livro_por_titulo("Python 101")
+    captured = capsys.readouterr()
+    assert f"{cliente.nome} encontrou o livro: Python 101 - John Doe" in captured.out
 
-        # Verifique se o cliente não encontra um livro inexistente
-        with unittest.mock.patch('builtins.print') as mock_print:
-            self.cliente.procurar_livro_por_titulo("Livro Inexistente")
-            mock_print.assert_called_with("João não encontrou o livro com o título: Livro Inexistente")
+    # Testando a busca por um livro inexistente
+    cliente.procurar_livro_por_titulo("Python Avançado")
+    captured = capsys.readouterr()
+    assert f"{cliente.nome} não encontrou o livro com o título: Python Avançado" in captured.out
 
-    def test_pegar_livro_emprestado(self):
-        livro2 = self.biblioteca.adicionar_livro("Python Avançado", "Jane Doe", "987654321")
-        self.cliente.entrar_na_biblioteca(self.biblioteca)
+def test_pegar_livro_emprestado_com_biblioteca(cliente, biblioteca, capsys):
+    # Adiciona um livro disponível à biblioteca
+    livro_disponivel = Livro("Python 101", Autor("John Doe", ""), "123456789")
+    biblioteca.adicionar_livro(livro_disponivel)
 
-        # Verifique se o cliente pode pegar emprestado um livro existente
-        self.cliente.pegar_livro_emprestado("987654321")
-        self.assertIn(livro2, self.cliente.biblioteca.livros_emprestados)
-        # Adicione mais verificações conforme necessário
+    # Adiciona um livro indisponível à biblioteca
+    livro_indisponivel = Livro("Python Avançado", Autor("Jane Doe", ""), "987654321", disponivel=False)
+    biblioteca.adicionar_livro(livro_indisponivel)
 
-    def test_devolver_livro(self):
-        livro3 = self.biblioteca.adicionar_livro("Data Science", "Alice Johnson", "555555555")
-        self.cliente.entrar_na_biblioteca(self.biblioteca)
-        self.cliente.pegar_livro_emprestado("555555555")
+    # Testando o empréstimo de um livro disponível
+    cliente.pegar_livro_emprestado("123456789")
+    captured = capsys.readouterr()
+    assert f"{cliente.nome} pegou emprestado o livro com o ISBN: 123456789" in captured.out
 
-        # Verifique se o cliente pode devolver um livro emprestado
-        self.cliente.devolver_livro("555555555")
-        self.assertNotIn(livro3, self.cliente.biblioteca.livros_emprestados)
-        # Adicione mais verificações conforme necessário
+    # Testando o empréstimo de um livro indisponível
+    cliente.pegar_livro_emprestado("987654321")
+    captured = capsys.readouterr()
+    assert f"{cliente.nome} não conseguiu pegar emprestado o livro com o ISBN: 987654321" in captured.out
 
-    def tearDown(self):
-        # Limpeza após os testes, se necessário
-        pass
+def test_devolver_livro_com_biblioteca(cliente, biblioteca, capsys):
+    # Adiciona um livro emprestado à biblioteca
+    livro_emprestado = Livro("Python 101", Autor("John Doe", ""), "123456789")
+    biblioteca.adicionar_livro(livro_emprestado)
+    biblioteca.emprestar_livro("123456789")
 
-if __name__ == '__main__':
-    unittest.main()
+    # Adiciona um livro não emprestado à biblioteca
+    livro_nao_emprestado = Livro("Python Avançado", Autor("Jane Doe", ""), "987654321")
+    biblioteca.adicionar_livro(livro_nao_emprestado)
+
+    # Testando a devolução de um livro emprestado
+    cliente.devolver_livro("123456789")
+    captured = capsys.readouterr()
+    assert f"{cliente.nome} devolveu o livro com o ISBN: 123456789" in captured.out
+
+    # Testando a devolução de um livro não emprestado
+    cliente.devolver_livro("987654321")
+    captured = capsys.readouterr()
+    assert f"{cliente.nome} tentou devolver um livro não emprestado com o ISBN: 987654321" in captured.out
+
+

@@ -18,7 +18,7 @@ def livro():
     return Livro("Livro Teste", autor, "1234567890")
 
 def test_reservar_livro(biblioteca, cliente, livro):
-    reserva = Reserva("Minhas Reservas")
+    reserva = reserva("Minhas Reservas")
     biblioteca.adicionar_livro(livro)
     cliente.entrar_na_biblioteca(biblioteca)
     
@@ -28,7 +28,7 @@ def test_reservar_livro(biblioteca, cliente, livro):
     assert not livro.disponivel
 
 def test_listar_reservas(biblioteca, cliente, livro, capsys):
-    reserva = Reserva("Minhas Reservas")
+    reserva = reserva("Minhas Reservas")
     biblioteca.adicionar_livro(livro)
     cliente.entrar_na_biblioteca(biblioteca)
     reserva.reservar_livro(livro.isbn, cliente)

@@ -4,35 +4,40 @@ from cliente import Cliente
 
 from multa import MultasPorAtraso
 
+import datetime
+
+
 @pytest.fixture
-def biblioteca():
-    return Biblioteca("Biblioteca Teste")
+def multas_por_atraso():
+    return MultasPorAtraso(taxa_multa_por_dia=2.5)
 
 @pytest.fixture
 def cliente():
-    return Cliente("João", 25, "Estudante")
+    return Cliente(nome="Cliente Teste", idade=30, cpf="123.456.789-01")
 
 @pytest.fixture
 def livro():
-    return livro("Aventuras na Biblioteca", "Autor Teste", "123456789")
+    return livro(titulo="Livro Teste", autor="Autor Teste", isbn="1234567890")
 
-@pytest.fixture
-def multas():
-    return MultasPorAtraso(taxa_multa_por_dia=5.0)
+def test_aplicar_multa(multas_por_atraso, cliente, livro):
+    dias_atraso = 5
 
-def test_aplicar_multa(biblioteca, cliente, livro, multas):
-    biblioteca.adicionar_cliente(cliente)
-    biblioteca.adicionar_livro(livro)
-    cliente.entrar_na_biblioteca(biblioteca)
+    multas_por_atraso.aplicar_multa(cliente, livro, dias_atraso)
 
-    biblioteca.emprestar_livro(livro.isbn)
-    livro.disponivel = False
+    multas_cliente = multas_por_atraso.obter_multas_cliente(cliente)
+    assert len(multas_cliente) == 1
 
-    # Simulando atraso de 3 dias
-    multas.aplicar_multa(cliente, livro, dias_atraso=3)
+    multa_info = multas_cliente.get(livro.titulo)
+    assert multa_info is not None
+    assert multa_info['valor'] == 2.5 * dias_atraso
 
-    # Verifica se a multa foi aplicada corretamente
-    multas_cliente = multas.obter_multas_cliente(cliente)
-    assert livro.titulo in multas_cliente
-    assert multas_cliente[livro.titulo]['valor'] == 15.0
-    assert 'data_aplicacao' in multas_cliente[livro.titulo]
+def test_calcular_total_multas_cliente(multas_por_atraso, cliente, livro):
+    dias_atraso_1 = 3
+    dias_atraso_2 = 7
+
+    multas_por_atraso.aplicar_multa(cliente, livro, dias_atraso_1)
+    multas_por_atraso.aplicar_multa(cliente, livro, dias_atraso_2)
+
+    total_multas = multas_por_atraso.calcular_total_multas_cliente(cliente)
+    assert total_multas == 2.5 * dias_atraso_1 + 2.5 * dias_atraso_2
+

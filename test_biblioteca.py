@@ -1,46 +1,49 @@
 import pytest
-from biblioteca import  Biblioteca
-from biblioteca import  livro
-# Função de fixture para criar uma instância de Biblioteca para testes
+
+import json
+# test_biblioteca.py
+from biblioteca import Biblioteca, Livro, Cliente,Autor  # Certifique-se de que a classe Livro está definida em biblioteca
+
+# Restante do seu código de teste...
+  
+
 @pytest.fixture
-def biblioteca_teste():
-    biblioteca = Biblioteca("Biblioteca de Teste")
-    livro1 = livro("Aventuras de Python", "Guido van Rossum", "123456")
-    livro2 = livro("Introdução ao Machine Learning", "Andrew Ng", "789012")
-    biblioteca.adicionar_livro(livro1)
-    biblioteca.adicionar_livro(livro2)
-    return biblioteca
+def biblioteca():
+    return Biblioteca("Biblioteca de Teste")
 
-# Teste para garantir que a biblioteca seja inicializada corretamente
-def test_inicializacao_biblioteca(biblioteca_teste):
-    assert biblioteca_teste.nome == "Biblioteca de Teste"
-    assert len(biblioteca_teste.livros) == 2
+@pytest.fixture
+def livro():
+    return Livro("Livro Teste", Autor("Autor Teste", "Localidade Teste"), "1234567890")
 
-# Teste para verificar se um livro é emprestado corretamente
-def test_emprestar_livro(biblioteca_teste):
-    biblioteca_teste.emprestar_livro("123456")
-    assert not biblioteca_teste.livros[0].disponivel
+@pytest.fixture
+def cliente():
+    return Cliente("Cliente Teste", 25, "123.456.789-01")
 
-# Teste para verificar se um livro é devolvido corretamente
-def test_devolver_livro(biblioteca_teste):
-    biblioteca_teste.emprestar_livro("123456")
-    biblioteca_teste.devolver_livro("123456")
-    assert biblioteca_teste.livros[0].disponivel
+def test_adicionar_livro(biblioteca, livro):
+    biblioteca.adicionar_livro(livro)
+    assert len(biblioteca.livros) == 1
+    assert biblioteca.livros[0] == livro
 
-# Teste para verificar se a biblioteca é salva e carregada corretamente
-def test_salvar_carregar_biblioteca(biblioteca_teste):
-    arquivo = "test_biblioteca.json"
-    biblioteca_teste.salvar_biblioteca(arquivo)
+def test_listar_livros(biblioteca, livro, capsys):
+    biblioteca.adicionar_livro(livro)
+    biblioteca.listar_livros()
+    captured = capsys.readouterr()
+    assert f"{livro.titulo} - {livro.autor.nome}" in captured.out
 
-    # Cria uma nova instância de Biblioteca
+# Adicione mais testes para outros métodos conforme necessário
+
+def test_salvar_carregar_biblioteca(biblioteca, livro, cliente, tmp_path):
+    arquivo = tmp_path / "test_biblioteca.json"
+    
+    biblioteca.adicionar_livro(livro)
+    biblioteca.adicionar_cliente(cliente)
+    biblioteca.salvar_biblioteca(arquivo)
+    
     nova_biblioteca = Biblioteca("Nova Biblioteca")
     nova_biblioteca.carregar_biblioteca(arquivo)
-
-    # Verifica se os dados foram carregados corretamente
-    assert nova_biblioteca.nome == "Biblioteca de Teste"
-    assert len(nova_biblioteca.livros) == 2
-    assert nova_biblioteca.livros[0].titulo == "Aventuras de Python"
-
-    # Limpa o arquivo de teste após os testes
-    import os
-    os.remove(arquivo)
+    
+    assert nova_biblioteca.nome == biblioteca.nome
+    assert len(nova_biblioteca.livros) == 1
+    assert nova_biblioteca.livros[0].titulo == livro.titulo
+    assert len(nova_biblioteca.clientes) == 1
+    assert nova_biblioteca.clientes[0].nome == cliente.nome

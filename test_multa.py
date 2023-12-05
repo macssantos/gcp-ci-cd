@@ -1,6 +1,9 @@
 import pytest
-from biblioteca import Biblioteca,livro
-from cliente import Cliente
+# test_multa.py
+from biblioteca import Biblioteca, Livro  # Certifique-se de que a classe Livro está definida em biblioteca
+
+# Restante do seu código de teste...
+
 
 from multa import MultasPorAtraso
 
@@ -13,7 +16,7 @@ def multas_por_atraso():
 
 @pytest.fixture
 def cliente():
-    return Cliente(nome="Cliente Teste", idade=30, cpf="123.456.789-01")
+    return cliente(nome="Cliente Teste", idade=30, cpf="123.456.789-01")
 
 @pytest.fixture
 def livro():

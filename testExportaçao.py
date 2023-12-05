@@ -1,3 +1,11 @@
+# Import necessary classes and modules
+from biblioteca import Biblioteca,livro
+from autor import Autor
+
+import datetime
+
+# Rest of your test code...
+
 from EsportaçaoDEDados import ExportacaoDeDados
 # Teste em pytest
 def test_exportacao(tmp_path):

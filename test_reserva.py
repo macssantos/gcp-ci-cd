@@ -1,5 +1,5 @@
 # test_biblioteca.py
-from biblioteca import Biblioteca, livro, Cliente
+from biblioteca import Biblioteca, Livro, Cliente
 
 def test_reservar_livro():
     # Configurando a biblioteca e adicionando um livro

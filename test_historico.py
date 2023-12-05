@@ -1,8 +1,9 @@
 import pytest
 from biblioteca import Biblioteca,Livro
 from cliente import Cliente
-
+from HistoricoCliente import HistoricoCliente
 from Emprestimo import Emprestimo
+import datetime
 
 @pytest.fixture
 def biblioteca():

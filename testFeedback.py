@@ -1,5 +1,5 @@
 import pytest
-from biblioteca import Biblioteca
+from biblioteca import Biblioteca,Livro
 from cliente import Cliente
 from feedback import FeedbackLivro
 

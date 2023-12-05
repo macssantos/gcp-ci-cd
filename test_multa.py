@@ -1,46 +1,44 @@
+import datetime
 import pytest
-# test_multa.py
-from biblioteca import Biblioteca, Livro  # Certifique-se de que a classe Livro está definida em biblioteca
 
-# Restante do seu código de teste...
-
-
+# Suponha que as classes estejam em um módulo chamado multas.py
 from multa import MultasPorAtraso
 
-import datetime
-
-
 @pytest.fixture
-def multas_por_atraso():
-    return MultasPorAtraso(taxa_multa_por_dia=2.5)
+def multas():
+    return MultasPorAtraso(taxa_multa_por_dia=2.0)
 
-@pytest.fixture
-def cliente():
-    return cliente(nome="Cliente Teste", idade=30, cpf="123.456.789-01")
+class ClienteMock:
+    def __init__(self, nome):
+        self.nome = nome
 
-@pytest.fixture
-def livro():
-    return livro(titulo="Livro Teste", autor="Autor Teste", isbn="1234567890")
+class LivroMock:
+    def __init__(self, titulo):
+        self.titulo = titulo
 
-def test_aplicar_multa(multas_por_atraso, cliente, livro):
+def test_aplicar_multa(multas):
+    cliente = ClienteMock("Alice")
+    livro = LivroMock("Python Avançado")
     dias_atraso = 5
 
-    multas_por_atraso.aplicar_multa(cliente, livro, dias_atraso)
+    multas.aplicar_multa(cliente, livro, dias_atraso)
 
-    multas_cliente = multas_por_atraso.obter_multas_cliente(cliente)
+    # Verifica se a multa foi aplicada corretamente
+    multas_cliente = multas.obter_multas_cliente(cliente)
     assert len(multas_cliente) == 1
+    assert multas_cliente[livro.titulo]['valor'] == 2.0 * dias_atraso
 
-    multa_info = multas_cliente.get(livro.titulo)
-    assert multa_info is not None
-    assert multa_info['valor'] == 2.5 * dias_atraso
+def test_calcular_total_multas_cliente(multas):
+    cliente = ClienteMock("Bob")
+    livro1 = LivroMock("Data Science")
+    livro2 = LivroMock("Machine Learning")
 
-def test_calcular_total_multas_cliente(multas_por_atraso, cliente, livro):
-    dias_atraso_1 = 3
-    dias_atraso_2 = 7
+    # Aplica multas para diferentes livros
+    multas.aplicar_multa(cliente, livro1, dias_atraso=3)
+    multas.aplicar_multa(cliente, livro2, dias_atraso=7)
 
-    multas_por_atraso.aplicar_multa(cliente, livro, dias_atraso_1)
-    multas_por_atraso.aplicar_multa(cliente, livro, dias_atraso_2)
+    # Calcula o total de multas para o cliente
+    total_multas = multas.calcular_total_multas_cliente(cliente)
 
-    total_multas = multas_por_atraso.calcular_total_multas_cliente(cliente)
-    assert total_multas == 2.5 * dias_atraso_1 + 2.5 * dias_atraso_2
-
+    # Verifica se o total de multas foi calculado corretamente
+    assert total_multas == (2.0 * 3) + (2.0 * 7)

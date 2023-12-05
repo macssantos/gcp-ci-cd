@@ -16,7 +16,7 @@ def cliente():
 def livro():
     return livro("Aventuras na Biblioteca", "Autor Teste", "123456789")
 
-def test_emprestimo_devolucao(biblioteca: Biblioteca, cliente: Cliente, livro: Any):
+def test_emprestimo_devolucao(biblioteca: Biblioteca, cliente: Cliente, Livro: livro):
     biblioteca.adicionar_cliente(cliente)
     biblioteca.adicionar_livro(livro)
 
@@ -29,7 +29,7 @@ def test_emprestimo_devolucao(biblioteca: Biblioteca, cliente: Cliente, livro: A
     emprestimo.devolver()
     assert livro.disponivel
 
-def test_historico_cliente(biblioteca: Biblioteca, cliente: Cliente, livro: Any):
+def test_historico_cliente(biblioteca: Biblioteca, cliente: Cliente, livro: livro):
     biblioteca.adicionar_cliente(cliente)
     biblioteca.adicionar_livro(livro)
 

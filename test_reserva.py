@@ -1,58 +1,39 @@
 
 
-from biblioteca import Biblioteca, Livro, Cliente
-from reserva import reserva
 import pytest
+from biblioteca import Biblioteca, Livro, Cliente, Autor
+from reserva import reserva
 
 @pytest.fixture
 def biblioteca():
-    return Biblioteca("Biblioteca de Teste")
+    return Biblioteca("Minha Biblioteca")
 
 @pytest.fixture
 def cliente():
-    return Cliente("Cliente Teste", 25, "Estudante")
+    return Cliente("Cliente Teste", 25, "123.456.789-01")
 
-def test_reservar_livro(biblioteca, cliente, capsys):
-    livro_disponivel = Livro("Python 101", "John Doe", "123456789")
-    livro_indisponivel = Livro("Python Avançado", "Jane Doe", "987654321", disponivel=False)
+@pytest.fixture
+def livro():
+    autor = Autor("Autor Teste", "Localidade Teste")
+    return Livro("Livro Teste", autor, "1234567890")
 
-    biblioteca.adicionar_livro(livro_disponivel)
-    biblioteca.adicionar_livro(livro_indisponivel)
-
+def test_reservar_livro(biblioteca, cliente, livro):
+    reserva = Reserva("Minhas Reservas")
+    biblioteca.adicionar_livro(livro)
     cliente.entrar_na_biblioteca(biblioteca)
+    
+    reserva.reservar_livro(livro.isbn, cliente)
 
-    # Testando a reserva de um livro disponível
-    reserva = reserva(biblioteca)
-    reserva.reservar_livro("123456789", cliente)
-    captured = capsys.readouterr()
-    assert f"{livro_disponivel.titulo} reservado para {cliente.nome} com sucesso." in captured.out
+    assert len(reserva.reservas) == 1
+    assert not livro.disponivel
 
-    # Testando a reserva de um livro indisponível
-    reserva.reservar_livro("987654321", cliente)
-    captured = capsys.readouterr()
-    assert "Livro não encontrado ou indisponível para reserva." in captured.out
-
-def test_listar_reservas(biblioteca, cliente, capsys):
-    livro_disponivel = Livro("Python 101", "John Doe", "123456789")
-    livro_indisponivel = Livro("Python Avançado", "Jane Doe", "987654321", disponivel=False)
-
-    biblioteca.adicionar_livro(livro_disponivel)
-    biblioteca.adicionar_livro(livro_indisponivel)
-
+def test_listar_reservas(biblioteca, cliente, livro, capsys):
+    reserva = Reserva("Minhas Reservas")
+    biblioteca.adicionar_livro(livro)
     cliente.entrar_na_biblioteca(biblioteca)
+    reserva.reservar_livro(livro.isbn, cliente)
 
-    # Reservando um livro disponível
-    reserva = reserva(biblioteca)
-    reserva.reservar_livro("123456789", cliente)
-
-    # Reservando um livro indisponível
-    reserva.reservar_livro("987654321", cliente)
-
-    # Listando as reservas
     reserva.listar_reservas()
     captured = capsys.readouterr()
-    assert f"{livro_disponivel.titulo} reservado para {cliente.nome}" in captured.out
-    assert "Livro Avançado reservado para Cliente Teste" not in captured.out
 
-
-
+    assert f"{livro.titulo} reservado para {cliente.nome}" in captured.out

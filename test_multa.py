@@ -1,5 +1,5 @@
 import pytest
-from biblioteca import Biblioteca,Livro
+from biblioteca import Biblioteca,livro
 from cliente import Cliente
 
 from multa import MultasPorAtraso
@@ -14,7 +14,7 @@ def cliente():
 
 @pytest.fixture
 def livro():
-    return Livro("Aventuras na Biblioteca", "Autor Teste", "123456789")
+    return livro("Aventuras na Biblioteca", "Autor Teste", "123456789")
 
 @pytest.fixture
 def multas():

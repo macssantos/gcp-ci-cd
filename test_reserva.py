@@ -1,10 +1,10 @@
 # test_biblioteca.py
-from biblioteca import Biblioteca, Livro, Cliente
+from biblioteca import Biblioteca, livro, Cliente
 
 def test_reservar_livro():
     # Configurando a biblioteca e adicionando um livro
     biblioteca = Biblioteca("Minha Biblioteca")
-    livro = Livro("Python para Iniciantes", "John Doe", "123456789")
+    livro = livro("Python para Iniciantes", "John Doe", "123456789")
     biblioteca.adicionar_livro(livro)
 
     # Configurando um cliente

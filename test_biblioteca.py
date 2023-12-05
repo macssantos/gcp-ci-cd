@@ -1,12 +1,12 @@
 import pytest
-from biblioteca import Livro, Biblioteca
-
+from biblioteca import  Biblioteca
+from biblioteca import  livro
 # Função de fixture para criar uma instância de Biblioteca para testes
 @pytest.fixture
 def biblioteca_teste():
     biblioteca = Biblioteca("Biblioteca de Teste")
-    livro1 = Livro("Aventuras de Python", "Guido van Rossum", "123456")
-    livro2 = Livro("Introdução ao Machine Learning", "Andrew Ng", "789012")
+    livro1 = livro("Aventuras de Python", "Guido van Rossum", "123456")
+    livro2 = livro("Introdução ao Machine Learning", "Andrew Ng", "789012")
     biblioteca.adicionar_livro(livro1)
     biblioteca.adicionar_livro(livro2)
     return biblioteca

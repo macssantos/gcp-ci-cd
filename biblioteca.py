@@ -1,3 +1,13 @@
+# arquivo: biblioteca.py
+
+"""
+Módulo Biblioteca
+
+Este módulo define as classes relacionadas à biblioteca, incluindo Autor, Livro, Cliente e Biblioteca.
+"""
+
+
+
 import json
 
 class Autor:
@@ -21,14 +31,37 @@ class Cliente:
         self.cpf = cpf
 
 class Biblioteca:
+    """
+        Inicializa um objeto Biblioteca.
+
+        Args:
+            nome (str): O nome da biblioteca.
+        """
     def __init__(self, nome):
         self.nome = nome
         self.livros = []
         self.clientes = []
+    """
+    Representa uma biblioteca.
 
+    A classe Biblioteca contém métodos para gerenciar livros, clientes e operações da biblioteca.
+    """
   
         # Método ajustado
     def adicionar_livro(self, titulo, autor, isbn, disponivel=True, categoria=None):
+        """
+        Adiciona um novo livro à biblioteca.
+
+        Args:
+            titulo (str): O título do livro.
+            autor (Autor): O autor do livro.
+            isbn (str): O número ISBN do livro.
+            disponivel (bool): Indica se o livro está disponível para empréstimo (padrão True).
+            categoria (str): A categoria do livro (opcional).
+
+        Returns:
+            Livro: O objeto Livro adicionado à biblioteca.
+        """
         novo_livro = Livro(titulo, autor, isbn, disponivel, categoria)
         self.livros.append(novo_livro)
         return novo_livro
@@ -61,6 +94,7 @@ class Biblioteca:
             print(f"{self.titulo} já está disponível.")
 
     def salvar_biblioteca(self, arquivo):
+        
             biblioteca_json = {
                 'nome': self.nome,
                 'livros': [

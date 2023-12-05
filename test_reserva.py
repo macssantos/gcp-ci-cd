@@ -17,7 +17,7 @@ def livro():
     autor = Autor("Autor Teste", "Localidade Teste")
     return Livro("Livro Teste", autor, "1234567890")
 
-def test_reservar_livro(biblioteca, cliente, livro):
+def test_reservar_livro(biblioteca: Biblioteca, cliente: Cliente, livro: Livro):
     reserva = reserva("Minhas reservas")
     biblioteca.adicionar_livro(livro)
     cliente.entrar_na_biblioteca(biblioteca)
@@ -27,7 +27,7 @@ def test_reservar_livro(biblioteca, cliente, livro):
     assert len(reserva.reservas) == 1
     assert not livro.disponivel
 
-def test_listar_reservas(biblioteca, cliente, livro, capsys):
+def test_listar_reservas(biblioteca: Biblioteca, cliente: Cliente, livro: Livro, capsys: pytest.CaptureFixture[str]):
     reserva = reserva("Minhas reservas")
     biblioteca.adicionar_livro(livro)
     cliente.entrar_na_biblioteca(biblioteca)
